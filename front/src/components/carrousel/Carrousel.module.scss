@@ -1,9 +1,13 @@
 .Container {
   .carrouselContainer {
     .arrow {
+      color: black;
       margin-left: 7%;
       margin-right: 7%;
       cursor: pointer;
+      &:hover {
+        color: white;
+      }
     }
     .carrousel {
       color: var(--debug-2);
@@ -21,16 +25,42 @@
       .minor {
         height: 20%;
         cursor: pointer;
+        &:hover {
+          outline: solid darkblue;
+        }
+      }
+      .nextToSelected {
+        position: relative;
+        height: 40%;
+        right: 22%;
+        transition-property: right, height;
+        transition-duration: 2s, 0.2s;
+      }
+      .selectedToPrev {
+        position: relative;
+        height: 20%;
+        right: 22%;
+        transition-property: right, height;
+        transition-duration: 2s, 0.2s;
       }
     }
   }
 }
 .dotsContainer {
   color: var(--debug);
+  transition: all 1s ease;
   .dot {
     cursor: pointer;
     color: black;
     margin-right: 1%;
     margin-left: 1%;
+    &:hover {
+      color: white;
+    }
+  }
+  .dot .desactivated {
+    &:hover {
+      color: black;
+    }
   }
 }

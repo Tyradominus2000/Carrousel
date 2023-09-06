@@ -4,6 +4,8 @@ export default function Carrousel() {
   const [loading, setLoading] = useState(true);
   const [image, setImage] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  // Memory of currentIndex that update are real time
+  const [currentIndexMem, setCurrentIndexMem] = useState(currentIndex);
   const [wait, setWait] = useState(false);
 
   /**
@@ -27,27 +29,23 @@ export default function Carrousel() {
   /**
    * For Debug purpose
    */
-  useEffect(() => {
-    console.log("image : ", image);
-    console.log("image length : ", image.length);
-  }, [image]);
-  useEffect(() => {
-    console.log("loading : ", loading);
-  }, [loading]);
+  // useEffect(() => {
+  //   console.log("image : ", image);
+  //   console.log("image length : ", image.length);
+  // }, [image]);
+  // useEffect(() => {
+  //   console.log("loading : ", loading);
+  // }, [loading]);
 
+  // useEffect(() => {
+  //   console.log("current index : ", currentIndex);
+  // }, [currentIndex]);
   useEffect(() => {
-    console.log("current index : ", currentIndex);
-    if (!loading) {
-      setWait(true);
-      // setTimeout(() => {
-      //   setWait(false);
-      // }, 2000);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentIndex]);
-  useEffect(() => {
-    console.log("wait : ", wait);
-  }, [wait]);
+    console.log("current index mem : ", currentIndexMem);
+  }, [currentIndexMem]);
+  // useEffect(() => {
+  //   console.log("wait : ", wait);
+  // }, [wait]);
 
   /**
    * Initialise loading and get all the image
@@ -63,9 +61,9 @@ export default function Carrousel() {
   function prevIndex() {
     // If we are in the first item go to the last one else just go minus one
     if (currentIndex === 0) {
-      setCurrentIndex(image.length - 1);
+      updateCurrentIndex(image.length - 1);
     } else {
-      setCurrentIndex(currentIndex - 1);
+      updateCurrentIndex(currentIndex - 1);
     }
   }
 
@@ -75,9 +73,9 @@ export default function Carrousel() {
   function nextIndex() {
     // If we are in the last item go to the first one else just go plus one
     if (currentIndex === image.length - 1) {
-      setCurrentIndex(0);
+      updateCurrentIndex(0);
     } else {
-      setCurrentIndex(currentIndex + 1);
+      updateCurrentIndex(currentIndex + 1);
     }
   }
 
@@ -86,7 +84,20 @@ export default function Carrousel() {
    * @param {Number} index
    */
   function moveToIndex(index) {
-    setCurrentIndex(index);
+    updateCurrentIndex(index);
+  }
+
+  /**
+   * Update the CurrentIndex while waiting for animation
+   * @param {Number} index
+   */
+  function updateCurrentIndex(index) {
+    setWait(true);
+    setCurrentIndexMem(index);
+    setTimeout(() => {
+      setCurrentIndex(index);
+      setWait(false);
+    }, 500);
   }
 
   return (
@@ -119,19 +130,20 @@ export default function Carrousel() {
                     currentIndex === 0 ? image.length - 1 : currentIndex - 1
                   ].src
                 }
-                onMouseOver={prevIndex}
+                onClick={prevIndex}
               />
               {/* Selected */}
               <img
                 src={`/images/${image[currentIndex].src}.jpg`}
                 alt={image[currentIndex].src}
+                className={`${wait ? style.selectedToPrev : ""}`}
               />
               {/* Next */}
               {console.log(
                 currentIndex === image.length - 1 ? 0 : currentIndex + 1
               )}
               <img
-                className={`${style.minor}`}
+                className={`${style.minor} ${wait ? style.nextToSelected : ""}`}
                 src={`/images/${
                   image[
                     currentIndex === image.length - 1 ? 0 : currentIndex + 1
@@ -142,7 +154,7 @@ export default function Carrousel() {
                     currentIndex === image.length - 1 ? 0 : currentIndex + 1
                   ].src
                 }
-                onMouseOver={nextIndex}
+                onClick={nextIndex}
               />
             </div>
           </>
@@ -153,13 +165,19 @@ export default function Carrousel() {
       </div>
       <div className={`${style.dotsContainer} d-flex justify-content-center`}>
         {image.map((image, index) => {
-          if (currentIndex === index) {
-            return <i className={`fa-solid fa-circle ${style.dot}`}></i>;
+          if (currentIndexMem === index) {
+            return <i className={`fa-solid fa-circle ${style.dot} `}></i>;
           } else {
             return (
               <i
-                className={`fa-regular fa-circle ${style.dot}`}
-                onClick={() => moveToIndex(index)}
+                className={`fa-regular fa-circle ${style.dot} ${
+                  wait ? style.desactivated : ""
+                }`}
+                onClick={() => {
+                  if (!wait) {
+                    moveToIndex(index);
+                  }
+                }}
               ></i>
             );
           }
