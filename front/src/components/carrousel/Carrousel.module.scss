@@ -43,6 +43,20 @@
         transition-property: right, height;
         transition-duration: 2s, 0.2s;
       }
+      .selectedToNext {
+        position: relative;
+        height: 20%;
+        left: 22%;
+        transition-property: left, height;
+        transition-duration: 2s, 0.2s;
+      }
+      .prevToSelected {
+        position: relative;
+        height: 40%;
+        left: 22%;
+        transition-property: left, height;
+        transition-duration: 2s, 0.2s;
+      }
     }
   }
 }

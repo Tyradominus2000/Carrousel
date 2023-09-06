@@ -7,6 +7,7 @@ export default function Carrousel() {
   // Memory of currentIndex that update are real time
   const [currentIndexMem, setCurrentIndexMem] = useState(currentIndex);
   const [wait, setWait] = useState(false);
+  const [direction, setDirection] = useState();
 
   /**
    * Fetch all the image src and name and store it in image
@@ -36,13 +37,12 @@ export default function Carrousel() {
   // useEffect(() => {
   //   console.log("loading : ", loading);
   // }, [loading]);
-
   // useEffect(() => {
   //   console.log("current index : ", currentIndex);
   // }, [currentIndex]);
-  useEffect(() => {
-    console.log("current index mem : ", currentIndexMem);
-  }, [currentIndexMem]);
+  // useEffect(() => {
+  //   console.log("current index mem : ", currentIndexMem);
+  // }, [currentIndexMem]);
   // useEffect(() => {
   //   console.log("wait : ", wait);
   // }, [wait]);
@@ -92,12 +92,34 @@ export default function Carrousel() {
    * @param {Number} index
    */
   function updateCurrentIndex(index) {
+    console.log("current index : ", currentIndex);
+    console.log("index : ", index);
     setWait(true);
     setCurrentIndexMem(index);
+    getDirection(index);
     setTimeout(() => {
       setCurrentIndex(index);
       setWait(false);
     }, 500);
+  }
+  /**
+   * Set direction to the direction of the carrousel
+   * @param {Number} index
+   */
+  function getDirection(index) {
+    if (index > currentIndex) {
+      if (index === image.length - 1 && currentIndex === 0) {
+        setDirection("left");
+      } else {
+        setDirection("right");
+      }
+    } else if (index < currentIndex) {
+      if (index === 0 && currentIndex === image.length - 1) {
+        setDirection("right");
+      } else {
+        setDirection("left");
+      }
+    }
   }
 
   return (
@@ -119,7 +141,9 @@ export default function Carrousel() {
             >
               {/* Prev */}
               <img
-                className={`${style.minor}`}
+                className={`${style.minor} ${
+                  wait ? (direction === "left" ? style.prevToSelected : "") : ""
+                }`}
                 src={`/images/${
                   image[
                     currentIndex === 0 ? image.length - 1 : currentIndex - 1
@@ -136,14 +160,25 @@ export default function Carrousel() {
               <img
                 src={`/images/${image[currentIndex].src}.jpg`}
                 alt={image[currentIndex].src}
-                className={`${wait ? style.selectedToPrev : ""}`}
+                className={`${
+                  wait
+                    ? direction === "right"
+                      ? style.selectedToPrev
+                      : direction === "left"
+                      ? style.selectedToNext
+                      : ""
+                    : ""
+                }`}
               />
               {/* Next */}
-              {console.log(
-                currentIndex === image.length - 1 ? 0 : currentIndex + 1
-              )}
               <img
-                className={`${style.minor} ${wait ? style.nextToSelected : ""}`}
+                className={`${style.minor} ${
+                  wait
+                    ? direction === "right"
+                      ? style.nextToSelected
+                      : ""
+                    : ""
+                }`}
                 src={`/images/${
                   image[
                     currentIndex === image.length - 1 ? 0 : currentIndex + 1
@@ -166,10 +201,13 @@ export default function Carrousel() {
       <div className={`${style.dotsContainer} d-flex justify-content-center`}>
         {image.map((image, index) => {
           if (currentIndexMem === index) {
-            return <i className={`fa-solid fa-circle ${style.dot} `}></i>;
+            return (
+              <i key={index} className={`fa-solid fa-circle ${style.dot} `}></i>
+            );
           } else {
             return (
               <i
+                key={index}
                 className={`fa-regular fa-circle ${style.dot} ${
                   wait ? style.desactivated : ""
                 }`}
