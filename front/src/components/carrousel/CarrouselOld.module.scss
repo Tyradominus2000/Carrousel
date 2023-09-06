@@ -1,0 +1,44 @@
+.Container {
+    .carrouselContainer {
+      .arrow {
+        margin-left: 7%;
+        margin-right: 7%;
+        cursor: pointer;
+      }
+      .carrousel {
+        color: var(--debug-2);
+        overflow: hidden;
+        transition: all 1s ease-in-out;
+        .image {
+          height: 50%;
+          margin-left: 5%;
+          margin-right: 5%;
+          display: none;
+        }
+        .selected {
+          display: block; /* Display the selected image */
+          transition: all 1s ease-in;
+          opacity: 1;
+        }
+        .prev {
+          display: block;
+          height: 30%;
+        }
+        .next {
+          display: block;
+          transition: all 1s ease-out;
+          height: 30%;
+        }
+      }
+    }
+  }
+  .dotsContainer {
+    color: var(--debug);
+    .dot {
+      cursor: pointer;
+      color: black;
+      margin-right: 1%;
+      margin-left: 1%;
+    }
+  }
+  
