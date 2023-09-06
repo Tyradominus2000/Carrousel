@@ -1,31 +1,39 @@
 import style from "./Carrousel.module.scss";
 import { useEffect, useState } from "react";
 export default function Carrousel() {
-  const [loading, setLoading] = useState(true);
-  const [image, setImage] = useState([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  // Memory of currentIndex that update are real time
-  const [currentIndexMem, setCurrentIndexMem] = useState(currentIndex);
-  const [wait, setWait] = useState(false);
-  const [direction, setDirection] = useState();
+  const [loading, setLoading] = useState(true); // Loading for backEnd request
+
+  const [image, setImage] = useState([]); // Array of image name and src
+
+  const [currentIndex, setCurrentIndex] = useState(0); // The currentIndex (have a retard)
+
+  const [currentIndexMem, setCurrentIndexMem] = useState(currentIndex); // Memory of currentIndex that update are real time
+
+  const [wait, setWait] = useState(false); // Var that say when to wait for anim
+
+  const [direction, setDirection] = useState(); // Direction of the carrousel
 
   /**
    * Fetch all the image src and name and store it in image
    */
   async function fetchImage() {
-    const response = await fetch("http://localhost:8000/image", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    // const response = await fetch("http://localhost:8000/image", {
+    //   method: "GET",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    // });
 
-    if (response.ok) {
-      const responseFromBackEnd = await response.json();
-      setImage(responseFromBackEnd);
-      // When we have the image we set the loader to false
-      setLoading(false);
-    }
+    // if (response.ok) {
+    //   const responseFromBackEnd = await response.json();}
+    setImage([
+      { src: "allied" },
+      { src: "laroyale" },
+      { src: "skygradian" },
+      { src: "victoryday" },
+    ]);
+    // When we have the image we set the loader to false
+    setLoading(false);
   }
   /**
    * For Debug purpose
@@ -92,16 +100,31 @@ export default function Carrousel() {
    * @param {Number} index
    */
   function updateCurrentIndex(index) {
-    console.log("current index : ", currentIndex);
-    console.log("index : ", index);
+    const diffJump = currentIndex - index;
+
     setWait(true);
     setCurrentIndexMem(index);
+
+    console.log("current index : ", currentIndex);
+    console.log("index : ", index);
+    console.log("diff : ", diffJump);
+
     getDirection(index);
-    // Timeout to make the anim
-    setTimeout(() => {
-      setCurrentIndex(index);
+
+    if (
+      (diffJump > 1 && diffJump !== 3) ||
+      (diffJump < -1 && diffJump !== -3)
+    ) {
+      console.log("Big Jump");
       setWait(false);
-    }, 500);
+      setCurrentIndex(index);
+    } else {
+      // Timeout to make the anim
+      setTimeout(() => {
+        setCurrentIndex(index);
+        setWait(false);
+      }, 500);
+    }
   }
   /**
    * Set direction to the direction of the carrousel

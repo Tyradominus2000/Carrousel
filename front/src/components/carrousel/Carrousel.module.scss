@@ -41,14 +41,14 @@
         height: 20%;
         right: 22%;
         transition-property: right, height;
-        transition-duration: 2s, 0.2s;
+        transition-duration: 2s, 0.5s;
       }
       .selectedToNext {
         position: relative;
         height: 20%;
         left: 22%;
         transition-property: left, height;
-        transition-duration: 2s, 0.2s;
+        transition-duration: 2s, 0.5s;
       }
       .prevToSelected {
         position: relative;
