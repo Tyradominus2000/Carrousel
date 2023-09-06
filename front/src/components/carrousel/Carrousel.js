@@ -29,7 +29,7 @@ export default function Carrousel() {
     setImage([
       { src: "allied" },
       { src: "laroyale" },
-      { src: "skygradian" },
+      { src: "skygardian" },
       { src: "victoryday" },
     ]);
     // When we have the image we set the loader to false
