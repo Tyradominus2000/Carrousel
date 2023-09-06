@@ -97,6 +97,7 @@ export default function Carrousel() {
     setWait(true);
     setCurrentIndexMem(index);
     getDirection(index);
+    // Timeout to make the anim
     setTimeout(() => {
       setCurrentIndex(index);
       setWait(false);
